@@ -1,0 +1,9 @@
+sample,files,species,treatment,specimen
+Human_NK_Day_0_122118_12_21_18_,outputs/Human_NK_Day_0_122118_12_21_18_quant.sf,human,resting,122118
+Human_NK_Day_0_30yo_1_18_19_,outputs/Human_NK_Day_0_30yo_1_18_19_quant.sf,human,resting,30yo
+Human_NK_Day_0_38F_11_3_18_,outputs/Human_NK_Day_0_38F_11_3_18_quant.sf,human,resting,38F
+Human_NK_Day_0_45M_11_3_18_,outputs/Human_NK_Day_0_45M_11_3_18_quant.sf,human,resting,45M
+Human_flash_20180803,outputs/Human_flash_20180803_quant.sf,human,coculture,20180803
+Human_flash_20190410,outputs/Human_flash_20190410_quant.sf,human,coculture,20190410
+Human_flash_20190426,outputs/Human_flash_20190426_quant.sf,human,coculture,20190436
+Human_flash_20190524,outputs/Human_flash_20190524_quant.sf,human,coculture,20190524

@@ -1,0 +1,9 @@
+sample,files,species,treatment,specimen
+Canine_NK_Day_0_HVE5_2_15_19_,outputs/Canine_NK_Day_0_HVE5_2_15_19_quant.sf,canine,resting,HVE5
+Canine_NK_Day_0_IRS4_12_14_18_,outputs/Canine_NK_Day_0_IRS4_12_14_18_quant.sf,canine,resting,IRS4
+Canine_NK_Day_0_KPC6_11_27_18_ ,outputs/Canine_NK_Day_0_KPC6_11_27_18_quant.sf,canine,resting,KPC6
+Canine_NK_Day_0_VBE7_12_14_18_,outputs/Canine_NK_Day_0_VBE7_12_14_18_quant.sf,canine,resting,VBE7
+Canine_flash_20180916,outputs/Canine_flash_20180916_quant.sf,canine,coculture,20180916
+Canine_flash_UYW9,outputs/Canine_flash_UYW9_quant.sf,canine,coculture,UYW9
+Canine_flash_XBG7,outputs/Canine_flash_XBG7_quant.sf,canine,coculture,XBG7
+Canine_flash_XDC7,outputs/Canine_flash_XDC7_quant.sf,canine,coculture,XDC7
