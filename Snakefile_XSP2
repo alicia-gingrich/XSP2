@@ -1,0 +1,129 @@
+from itertools import chain, combinations
+from os.path import join
+import glob
+import re
+
+RAWDATA_DIR = '/vol_b/rawdata/combo_raw_data'
+
+SAMPLE_NAMES = ['Canine_flash_20180916', 'Canine_flash_UYW9', 'Canine_flash_XBG7', 'Canine_flash_XDC7', 'Canine_NK_Day_0_HVE5_2_15_19', 'Canine_NK_Day_0_IRS4_12_14_18', 'Canine_NK_Day_0_KPC6_11_27_18', 'Canine_NK_Day_0_VBE7_12_14_18','Human_flash_20180803', 'Human_flash_20190410', 'Human_flash_20190426', 'Human_flash_20190524', 'Human_NK_Day_0_122118_12_21_18', 'Human_NK_Day_0_30yo_1_18_19', 'Human_NK_Day_0_38F_11_3_18', 'Human_NK_Day_0_45M_11_3_18', 'Mouse_flash_IL2IKA', 'Mouse_flash_IL2IKB', 'Mouse_flash_IL2IKC', 'Mouse_flash_T252_1']
+
+rule all:
+    input: 
+        expand('outputs/quant_cf_nonribo/{sample}_quant/quant.sf', sample = SAMPLE_NAMES),
+	    expand('outputs/quant_hs_nonribo/{sample}_quant/quant.sf', sample = SAMPLE_NAMES),
+		expand('outputs/quant_mm_nonribo/{sample}_quant/quant.sf', sample = SAMPLE_NAMES),
+		expand('outputs/ribo/{sample}-nonribo.qc.fq.gz', sample = SAMPLE_NAMES)
+
+rule cat_fastq:
+    output: 'inputs/cat/{sample}.fq.gz'
+    params: indir = RAWDATA_DIR
+    shell:'''
+    cat {params.indir}/{wildcards.sample}_S*_L00*_R1_001.fastq.gz > {output} 
+    '''
+
+rule first_12_qc:
+    output: 'outputs/quality/{sample}.trim.fq.gz'
+    input: 'inputs/cat/{sample}.fq.gz'
+    conda: 'env.yml'
+    shell:''' 
+    trimmomatic SE {input} {output} LEADING:12
+    '''
+    
+rule bbduk_qc:
+    output: 'outputs/quality/{sample}.trimbb.fq.gz'
+    input:
+        fq = 'outputs/quality/{sample}.trim.fq.gz',
+        polyA = 'inputs/polyA.fa.gz',
+        truseqr = 'inputs/truseq_rna.fa.gz',
+        truseq = 'inputs/truseq.fa.gz'
+    conda: 'env.yml'
+    shell:'''
+    bbduk.sh in={input.fq} out={output} ref={input.polyA},{input.truseq},{input.truseqr} k=13 ktrim=r useshortkmers=t mink=5 qtrim=r trimq=10 minlength=20
+    '''
+
+rule bbduk_find_ribo:
+    output:
+        ribo='outputs/ribo/{sample}-ribo.qc.fq.gz',
+        nonribo='outputs/ribo/{sample}-nonribo.qc.fq.gz'
+    input: 
+        reads='outputs/quality/{sample}.trimbb.fq.gz',
+        ribo='inputs/humanribo.fas'
+    conda: 'env.yml'
+    shell:'''
+    bbduk.sh -Xmx4g in={input.reads} outm={output.ribo} outu={output.nonribo} k=31 ref={input.ribo}
+    '''
+
+rule download_cf_transcriptome:
+    output: 'inputs/transcriptomes/GCF_000002285.3_CanFam3.1_rna.fna.gz'
+    shell:'''
+    curl -L ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/285/GCF_000002285.3_CanFam3.1/GCF_000002285.3_CanFam3.1_rna.fna.gz -o {output}
+    '''
+
+rule download_hs_transcriptome:
+    output: 'inputs/transcriptomes/GCF_000001405.39_GRCh38.p13_rna.fna.gz'
+    shell:'''
+    curl -L ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.39_GRCh38.p13/GCF_000001405.39_GRCh38.p13_rna.fna.gz -o {output}
+    '''
+	
+rule download_mm_transcriptome:
+	output: 'inputs/transcriptomes/GCF_000001635.26_GRCm38.p6_rna.fna.gz'
+	shell:'''
+	curl -L ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.26_GRCm38.p6/GCF_000001635.26_GRCm38.p6_rna.fna.gz -o {output}
+	'''
+
+rule index_cf:
+    output: directory('inputs/transcriptomes/cf_index')
+    input: 'inputs/transcriptomes/GCF_000002285.3_CanFam3.1_rna.fna.gz'
+    conda: 'env.yml'
+    shell:'''
+    salmon index -t {input} -i {output}
+    '''
+
+rule index_hs:
+    output: directory('inputs/transcriptomes/hs_index')
+    input: 'inputs/transcriptomes/GCF_000001405.39_GRCh38.p13_rna.fna.gz'
+    conda: 'env.yml'
+    shell:'''
+    salmon index -t {input} -i {output}
+    '''
+	
+rule index_mm:
+	output: directory('inputs/transcriptomes/mm_index')
+    input: 'inputs/transcriptomes/GCF_000001635.26_GRCm38.p6_rna.fna.gz'
+    conda: 'env.yml'
+    shell:'''
+    salmon index -t {input} -i {output}
+    '''
+
+rule salmon_cf:
+    output: 'outputs/quant_cf_nonribo/{sample}_quant/quant.sf',
+    input:
+        fq = 'outputs/ribo/{sample}-nonribo.qc.fq.gz',
+        indx = 'inputs/transcriptomes/cf_index'
+    conda: 'env.yml'
+    params: outdir = "outputs/quant_cf_nonribo/{sample}_quant/"
+    shell:'''
+    salmon quant -i {input.indx} -l A -r {input.fq} --writeUnmappedNames -o {params.outdir}
+    '''
+
+rule salmon_hs:
+    output: 'outputs/quant_hs_nonribo/{sample}_quant/quant.sf',
+    input:
+        fq = 'outputs/ribo/{sample}-nonribo.qc.fq.gz',
+        indx = 'inputs/transcriptomes/hs_index'
+    conda: 'env.yml'
+    params: outdir = "outputs/quant_hs_nonribo/{sample}_quant/"
+    shell:'''
+    salmon quant -i {input.indx} -l A -r {input.fq} --writeUnmappedNames -o {params.outdir}
+    '''
+
+rule salmon_mm: 
+    output: 'outputs/quant_mm_nonribo/{sample}_quant/quant.sf',
+    input:
+        fq = 'outputs/ribo/{sample}-nonribo.qc.fq.gz',
+        indx = 'inputs/transcriptomes/mm_index'
+    conda: 'env.yml'
+    params: outdir = "outputs/quant_mm_nonribo/{sample}_quant/"
+    shell:'''
+    salmon quant -i {input.indx} -l A -r {input.fq} --writeUnmappedNames -o {params.outdir}
+    '''
