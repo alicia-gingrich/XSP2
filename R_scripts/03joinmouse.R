@@ -1,3 +1,6 @@
+library(readr)
+library(dplyr)
+
 ###here is the code for repeating in mice
 #download tx2gene mice feature table again
 download.file(url = "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.26_GRCm38.p6/GCF_000001635.26_GRCm38.p6_feature_table.txt.gz",
@@ -28,20 +31,20 @@ feat_table_mm_ortho <- feat_table_mm_ortho%>%
   distinct()%>%
   filter(!is.na(entrezID.x))
 head(feat_table_mm_ortho)
-#should have 12473 obs. of 2 variables
+dim(feat_table_mm_ortho) # should have 12473 obs. of 2 variables
 
 #read in mouse counts from local computer
-mouse_counts <- read.csv("C:/Users/Alicia/Desktop/XSP2/outputs/counts/mouse_counts.csv")
+mouse_counts <- read.csv("outputs/counts/mouse_counts.csv")
 head(mouse_counts)
 
 #join table with symbols and entrezID for all human genes with dog 1:1 orthos, to human counts
 mouse_ortho_counts <- inner_join(mouse_counts, feat_table_mm_ortho, by = c("X"="symbol"))
 head(mouse_ortho_counts)
-#should have 12461 obs. of 10 variables
+dim(mouse_ortho_counts) # should have 12461 obs. of 10 variables
 
 #save mouse_ortho_counts to XSP (working directory) folder for DESeq later
 write.csv(as.data.frame(mouse_ortho_counts), 
-          file="mouse_ortho_counts.csv")
+          file="outputs/ortho_counts/mouse_ortho_counts.csv")
 
 
 

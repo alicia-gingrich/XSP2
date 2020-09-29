@@ -1,3 +1,6 @@
+library(readr)
+library(dplyr)
+
 #now join counts and feature tables for each species
 #download tx2gene dog feature table again
 download.file(url = "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/285/GCF_000002285.3_CanFam3.1/GCF_000002285.3_CanFam3.1_feature_table.txt.gz",
@@ -31,14 +34,14 @@ head(feat_table_cf_ortho)
 #should have 8137 obs. of 2 variables
 
 #read in dog counts from local computer
-dog_counts <- read.csv("C:/Users/Alicia/Desktop/XSP2/outputs/counts/dog_counts.csv")
+dog_counts <- read.csv("outputs/counts/dog_counts.csv")
 head(dog_counts)
 
 #join table with symbols and entrezID for all dog genes with human 1:1 orthos, to dog counts
 dog_ortho_counts <- inner_join(dog_counts, feat_table_cf_ortho, by = c("X"="symbol"))
 head(dog_ortho_counts)
-#should have 8123 obs. of 10 variables
+dim(dog_ortho_counts) # should have 8123 obs. of 14 variables
 
-#save dog_ortho_counts to XSP2 (working directory) folder for DESeq later
+# save dog_ortho_counts to XSP2 (working directory) folder for DESeq later
 write.csv(as.data.frame(dog_ortho_counts), 
-          file="dog_ortho_counts.csv")
+          file="outputs/ortho_counts/dog_ortho_counts.csv")

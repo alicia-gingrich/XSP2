@@ -1,7 +1,7 @@
 #Make Ortho Counts for Human, Dog, Mouse
 
 #read in Human and Dog Orthologous genes list from OMA with Entrez notation 
-ortho_entrez1 <- read_tsv("C:/Users/Alicia/Desktop/XSP2/Ortho_HSA_CFA_Entrez.txt",
+ortho_entrez1 <- read_tsv("Ortho_HSA_CFA_Entrez.txt",
                           col_names = c("Human", "Dog", "Pair", "entrezID"))
 head(ortho_entrez1)
 
@@ -10,7 +10,7 @@ ortho_entrez1 <- filter(ortho_entrez1, Pair=="1:1")
 table(is.na(ortho_entrez1$entrezID))
 head(ortho_entrez1)
 
-ortho_entrez3 <- read_tsv("C:/Users/Alicia/Desktop/XSP2/Ortho_CFA_MUS_Entrez.txt",
+ortho_entrez3 <- read_tsv("Ortho_CFA_MUS_Entrez.txt",
                           col_names = c("Dog", "Mouse", "Pair", "entrezID"))
 head(ortho_entrez3)
 

@@ -1,4 +1,7 @@
-###then humans
+library(readr)
+library(tximport)
+
+## make human counts
 # read in file names 
 files <- read_csv("samples_hs.csv")
 
