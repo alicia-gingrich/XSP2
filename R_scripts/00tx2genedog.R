@@ -4,7 +4,7 @@ library(tximport)
 library(readr)
 library(dplyr)
 library(tidyverse)
-setwd ("C:/Users/Alicia/Desktop/XSP2")
+#setwd ("C:/Users/Alicia/Desktop/XSP2")
 
 ###Dogs
 #find and download tabular file for canine from NCBI (feature_table.txt.gz)
@@ -21,7 +21,7 @@ feat_table_cf <- feat_table_cf%>%
 ###relevant columns used to include GeneID, had to remove this since tximport only tolerates 2 colums. Will need to recall feat_tables and add back in for Ortho genes transformation
 
 #make sure table is capturing all salmon counts, should be 82430 obs in canine
-quant <- read_tsv("outputs/Canine_NK_Day_0_HVE5_2_15_19_quant.sf")
+quant <- read_tsv("outputs/quant_cf_nonribo/D1_R_quant/quant.sf")
 table(quant$Name %in% feat_table_cf$product_accession)
 
 #output table to folder

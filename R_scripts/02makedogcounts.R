@@ -1,6 +1,8 @@
-#make counts for human, dog and mouse on their own
+library(readr)
+library(tximport)
+# make counts for human, dog and mouse on their own
 
-###first dog
+### first dog
 # read in file names 
 files <- read_csv("samples_cf.csv")
 

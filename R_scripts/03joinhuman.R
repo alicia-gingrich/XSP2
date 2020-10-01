@@ -1,3 +1,5 @@
+library(readr)
+library(dplyr)
 ###here is the code for repeating in humans
 #download tx2gene human feature table again
 download.file(url = "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.38_GRCh38.p12/GCF_000001405.38_GRCh38.p12_feature_table.txt.gz",
@@ -28,17 +30,17 @@ feat_table_hs_ortho <- feat_table_hs_ortho%>%
   distinct()%>%
   filter(!is.na(entrezID.x))
 head(feat_table_hs_ortho)
-#should have 12816 obs. of 2 variables
+dim(feat_table_hs_ortho) #should have 12816 obs. of 2 variables
 
 #read in human counts from local computer
-human_counts <- read.csv("C:/Users/Alicia/Desktop/XSP2/outputs/counts/human_counts.csv")
+human_counts <- read.csv("outputs/counts/human_counts.csv")
 head(human_counts)
 
 #join table with symbols and entrezID for all human genes with dog 1:1 orthos, to human counts
 human_ortho_counts <- inner_join(human_counts, feat_table_hs_ortho, by = c("X"="symbol"))
-head(human_ortho_counts)
-#should have 12804 obs. of 10 variables
+head(human_ortho_counts) 
+dim(human_ortho_counts) # should have 12804 obs. of 10 variables or 12614 of 10 vars
 
 #save human_ortho_counts to XSP (working directory) folder for DESeq later
 write.csv(as.data.frame(human_ortho_counts), 
-          file="human_ortho_counts.csv")
+          file="outputs/ortho_counts/human_ortho_counts.csv")

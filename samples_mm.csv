@@ -1,7 +1,9 @@
-sample,files,species,treatment,specimen
-SRR5828214,outputs/SRR5828214_quant.sf,mouse,resting,5828214
-SRR5828215,outputs/SRR5828215_quant.sf,mouse,resting,5828215
-Mouse_flash_IL2IKA,outputs/Mouse_flash_IL2IKA_quant.sf,mouse,coculture,IL2IKA
-Mouse_flash_IL2IKB,outputs/Mouse_flash_IL2IKB_quant.sf,mouse,coculture,IL2IKB
-Mouse_flash_IL2IKC,outputs/Mouse_flash_IL2IKC_quant.sf,mouse,coculture,IL2IKC
-Mouse_flash_T252_1,outputs/Mouse_flash_T252_1_quant.sf,mouse,coculture,T252_1
+sample,files,species,treatment
+M1_R,outputs/quant_mm_nonribo/M1_R_quant/quant.sf,mouse,nkp46_resting
+M2_R,outputs/quant_mm_nonribo/M2_R_quant/quant.sf,mouse,nkp46_resting
+M3_R,outputs/quant_mm_nonribo/M3_R_quant/quant.sf,mouse,nkp46_resting
+M4_R,outputs/quant_mm_nonribo/M4_R_quant/quant.sf,mouse,nkp46_resting
+M5_IL2,outputs/quant_mm_nonribo/M5_IL2_quant/quant.sf,mouse,nkp46_activated
+M6_IL2,outputs/quant_mm_nonribo/M6_IL2_quant/quant.sf,mouse,nkp46_activated
+M7_IL2,outputs/quant_mm_nonribo/M7_IL2_quant/quant.sf,mouse,nkp46_activated
+M8_IL2,outputs/quant_mm_nonribo/M8_IL2_quant/quant.sf,mouse,nkp46_activated

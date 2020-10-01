@@ -1,4 +1,7 @@
-###then mice
+library(readr)
+library(tximport)
+
+## make mouse counts
 # read in file names 
 files <- read_csv("samples_mm.csv")
 
